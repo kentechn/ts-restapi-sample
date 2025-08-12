@@ -1,0 +1,17 @@
+post:
+  tags:
+    - auth
+  summary: User logout
+  description: 'Logout user and invalidate token'
+  operationId: logout
+  security:
+    - bearerAuth: []
+  responses:
+    '204':
+      description: Logout successful
+    '401':
+      $ref: ../components/responses/errors/UnauthorizedErrorResponse.yml
+    '429':
+      $ref: ../components/responses/errors/TooManyRequestsErrorResponse.yml
+    '500':
+      $ref: ../components/responses/errors/InternalErrorResponse.yml

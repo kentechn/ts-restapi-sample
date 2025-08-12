@@ -1,0 +1,8 @@
+description: Rate limit exceeded
+content:
+  application/json:
+    schema:
+      $ref: ../../schemas/BaseError.yml
+    example:
+      code: TOO_MANY_REQUESTS
+      detail: リクエスト回数の上限に達しました。しばらく待ってから再試行してください

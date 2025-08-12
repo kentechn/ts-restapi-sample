@@ -1,0 +1,102 @@
+get:
+  tags:
+    - users
+  summary: Get user by ID (Admin only)
+  description: 'Retrieve a specific user by ID. Only accessible by administrators.'
+  operationId: getUserById
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: User ID
+      schema:
+        $ref: ../components/schemas/ULID.yml
+  responses:
+    '200':
+      description: User details
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/UserDetails.yml
+    '401':
+      $ref: ../components/responses/errors/UnauthorizedErrorResponse.yml
+    '403':
+      $ref: ../components/responses/errors/ForbiddenErrorResponse.yml
+    '404':
+      $ref: ../components/responses/errors/NotFoundErrorResponse.yml
+    '429':
+      $ref: ../components/responses/errors/TooManyRequestsErrorResponse.yml
+    '500':
+      $ref: ../components/responses/errors/InternalErrorResponse.yml
+patch:
+  tags:
+    - users
+  summary: Update user (Admin only)
+  description: 'Update a specific user. Only accessible by administrators.'
+  operationId: updateUser
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: User ID
+      schema:
+        $ref: ../components/schemas/ULID.yml
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/UserUpdate.yml
+  responses:
+    '200':
+      description: User updated
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/UserDetails.yml
+    '400':
+      $ref: ../components/responses/errors/BadRequestErrorResponse.yml
+    '401':
+      $ref: ../components/responses/errors/UnauthorizedErrorResponse.yml
+    '403':
+      $ref: ../components/responses/errors/ForbiddenErrorResponse.yml
+    '404':
+      $ref: ../components/responses/errors/NotFoundErrorResponse.yml
+    '422':
+      $ref: ../components/responses/errors/UnprocessableEntityErrorResponse.yml
+    '429':
+      $ref: ../components/responses/errors/TooManyRequestsErrorResponse.yml
+    '500':
+      $ref: ../components/responses/errors/InternalErrorResponse.yml
+delete:
+  tags:
+    - users
+  summary: Delete user (Admin only)
+  description: 'Delete a specific user. Only accessible by administrators.'
+  operationId: deleteUser
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: User ID
+      schema:
+        $ref: ../components/schemas/ULID.yml
+  responses:
+    '204':
+      description: User deleted
+    '401':
+      $ref: ../components/responses/errors/UnauthorizedErrorResponse.yml
+    '403':
+      $ref: ../components/responses/errors/ForbiddenErrorResponse.yml
+    '404':
+      $ref: ../components/responses/errors/NotFoundErrorResponse.yml
+    '429':
+      $ref: ../components/responses/errors/TooManyRequestsErrorResponse.yml
+    '500':
+      $ref: ../components/responses/errors/InternalErrorResponse.yml

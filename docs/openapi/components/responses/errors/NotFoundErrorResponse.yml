@@ -1,0 +1,8 @@
+description: Resource not found
+content:
+  application/json:
+    schema:
+      $ref: ../../schemas/BaseError.yml
+    example:
+      code: NOT_FOUND
+      detail: 指定されたリソースが見つかりません

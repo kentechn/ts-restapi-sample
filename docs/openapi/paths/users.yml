@@ -1,0 +1,72 @@
+get:
+  tags:
+    - users
+  summary: Get all users (Admin only)
+  description: 'Retrieve all users with pagination. Only accessible by administrators.'
+  operationId: getAllUsers
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: page
+      in: query
+      description: Page number
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    - name: limit
+      in: query
+      description: Number of items per page
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+  responses:
+    '200':
+      $ref: ../components/responses/users/UserListResponse.yml
+    '401':
+      $ref: ../components/responses/errors/UnauthorizedErrorResponse.yml
+    '403':
+      $ref: ../components/responses/errors/ForbiddenErrorResponse.yml
+    '429':
+      $ref: ../components/responses/errors/TooManyRequestsErrorResponse.yml
+    '500':
+      $ref: ../components/responses/errors/InternalErrorResponse.yml
+post:
+  tags:
+    - users
+  summary: Create a new user (Admin only)
+  description: 'Create a new user. Only accessible by administrators.'
+  operationId: createUser
+  security:
+    - bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/UserCreate.yml
+  responses:
+    '201':
+      description: User created
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/UserDetails.yml
+    '400':
+      $ref: ../components/responses/errors/BadRequestErrorResponse.yml
+    '401':
+      $ref: ../components/responses/errors/UnauthorizedErrorResponse.yml
+    '403':
+      $ref: ../components/responses/errors/ForbiddenErrorResponse.yml
+    '409':
+      $ref: ../components/responses/errors/ConflictErrorResponse.yml
+    '422':
+      $ref: ../components/responses/errors/UnprocessableEntityErrorResponse.yml
+    '429':
+      $ref: ../components/responses/errors/TooManyRequestsErrorResponse.yml
+    '500':
+      $ref: ../components/responses/errors/InternalErrorResponse.yml

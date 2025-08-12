@@ -1,0 +1,701 @@
+openapi: 3.0.3
+info:
+  title: User API
+  version: 1.0.0
+  description: API for user CRUD operations and authentication (login/logout)
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Development server
+tags:
+  - name: users
+    description: Operations about users
+  - name: auth
+    description: Authentication operations (login/logout)
+  - name: health
+    description: Health check operations
+paths:
+  /health:
+    get:
+      tags:
+        - health
+      summary: Health check endpoint
+      description: Returns the health status of the API
+      operationId: healthCheck
+      security: []
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                required:
+                  - status
+        '503':
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+  /users:
+    get:
+      tags:
+        - users
+      summary: Get all users (Admin only)
+      description: Retrieve all users with pagination. Only accessible by administrators.
+      operationId: getAllUsers
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          description: Number of items per page
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+      responses:
+        '200':
+          $ref: '#/components/responses/UserListResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalErrorResponse'
+    post:
+      tags:
+        - users
+      summary: Create a new user (Admin only)
+      description: Create a new user. Only accessible by administrators.
+      operationId: createUser
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetails'
+        '400':
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        '409':
+          $ref: '#/components/responses/ConflictErrorResponse'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntityErrorResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalErrorResponse'
+  /users/{id}:
+    get:
+      tags:
+        - users
+      summary: Get user by ID (Admin only)
+      description: Retrieve a specific user by ID. Only accessible by administrators.
+      operationId: getUserById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: User ID
+          schema:
+            $ref: '#/components/schemas/ULID'
+      responses:
+        '200':
+          description: User details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetails'
+        '401':
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalErrorResponse'
+    patch:
+      tags:
+        - users
+      summary: Update user (Admin only)
+      description: Update a specific user. Only accessible by administrators.
+      operationId: updateUser
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: User ID
+          schema:
+            $ref: '#/components/schemas/ULID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+      responses:
+        '200':
+          description: User updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetails'
+        '400':
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntityErrorResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalErrorResponse'
+    delete:
+      tags:
+        - users
+      summary: Delete user (Admin only)
+      description: Delete a specific user. Only accessible by administrators.
+      operationId: deleteUser
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: User ID
+          schema:
+            $ref: '#/components/schemas/ULID'
+      responses:
+        '204':
+          description: User deleted
+        '401':
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalErrorResponse'
+  /auth/login:
+    post:
+      tags:
+        - auth
+      summary: User login
+      description: Authenticate user with email and password
+      operationId: login
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntityErrorResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalErrorResponse'
+  /auth/logout:
+    post:
+      tags:
+        - auth
+      summary: User logout
+      description: Logout user and invalidate token
+      operationId: logout
+      security:
+        - bearerAuth: []
+      responses:
+        '204':
+          description: Logout successful
+        '401':
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalErrorResponse'
+  /auth/me:
+    get:
+      tags:
+        - auth
+      summary: Get current user info
+      description: Get current authenticated user information
+      operationId: getCurrentUser
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Current user information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserMe'
+        '401':
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalErrorResponse'
+  /auth/password:
+    patch:
+      tags:
+        - auth
+      summary: Change password
+      description: Change current user password
+      operationId: changePassword
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordChangeRequest'
+      responses:
+        '204':
+          description: Password changed successfully
+        '400':
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntityErrorResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalErrorResponse'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    InternalErrorResponse:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BaseError'
+          example:
+            code: INTERNAL_SERVER_ERROR
+            detail: 予期しないサーバーエラーが発生しました
+    BadRequestErrorResponse:
+      description: Bad request - malformed JSON or unparseable request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BaseError'
+          example:
+            code: BAD_REQUEST
+            detail: リクエストの形式が正しくありません
+    UnprocessableEntityErrorResponse:
+      description: Unprocessable entity - validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
+    NotFoundErrorResponse:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BaseError'
+          example:
+            code: NOT_FOUND
+            detail: 指定されたリソースが見つかりません
+    UnauthorizedErrorResponse:
+      description: Unauthorized access
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BaseError'
+          example:
+            code: UNAUTHORIZED
+            detail: 認証が必要です
+    ConflictErrorResponse:
+      description: Resource conflict
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BaseError'
+          example:
+            code: CONFLICT
+            detail: 指定されたリソースは既に存在します
+    TooManyRequestsErrorResponse:
+      description: Rate limit exceeded
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BaseError'
+          example:
+            code: TOO_MANY_REQUESTS
+            detail: リクエスト回数の上限に達しました。しばらく待ってから再試行してください
+    ForbiddenErrorResponse:
+      description: Forbidden access
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BaseError'
+          example:
+            code: FORBIDDEN
+            detail: このリソースへのアクセス権限がありません
+    ServiceUnavailableErrorResponse:
+      description: Service is unavailable
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BaseError'
+          example:
+            code: SERVICE_UNAVAILABLE
+            detail: サービスが利用できません
+    UserListResponse:
+      description: List of users with pagination metadata
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserListItem'
+                description: Array of users
+              meta:
+                type: object
+                properties:
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                required:
+                  - pagination
+                description: Metadata including pagination information
+            required:
+              - data
+              - meta
+            additionalProperties: false
+          example:
+            data:
+              - id: 01ARZ3NDEKTSV4RRFFQ69G5FAV
+                username: john_doe
+                email: john@example.com
+                createdAt: '2024-01-15T10:30:00Z'
+                updatedAt: '2024-01-15T10:30:00Z'
+              - id: 01ARZ3NDEKTSV4RRFFQ69G5FAW
+                username: jane_smith
+                email: jane@example.com
+                createdAt: '2024-01-14T09:20:00Z'
+                updatedAt: '2024-01-14T09:20:00Z'
+              - id: 01ARZ3NDEKTSV4RRFFQ69G5FAZ
+                username: jane_l
+                email: jane_l@example.com
+                createdAt: '2024-01-13T09:20:00Z'
+                updatedAt: '2024-01-13T09:20:00Z'
+            meta:
+              pagination:
+                page: 2
+                limit: 2
+                total: 3
+  schemas:
+    BaseError:
+      type: object
+      required:
+        - code
+        - detail
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code
+        detail:
+          type: string
+          description: Human-readable error details
+      additionalProperties: false
+      example:
+        code: INTERNAL_SERVER_ERROR
+        detail: 予期しないサーバーエラーが発生しました
+    ValidationError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          required:
+            - errors
+          properties:
+            errors:
+              type: array
+              items:
+                $ref: '#/components/schemas/ValidationErrorItem'
+      example:
+        code: VALIDATION_ERROR
+        detail: 入力値のバリデーションに失敗しました
+        errors:
+          - field: email
+            code: INVALID_FORMAT
+            message: メールアドレスの形式が正しくありません
+          - field: password
+            code: TOO_SHORT
+            message: パスワードは8文字以上で入力してください
+    ValidationErrorItem:
+      type: object
+      required:
+        - field
+        - code
+        - message
+      properties:
+        field:
+          type: string
+        code:
+          type: string
+        message:
+          type: string
+    ULID:
+      type: string
+      pattern: ^[0-9A-HJKMNP-TV-Z]{26}$
+      description: ULID (Universally Unique Lexicographically Sortable Identifier)
+      example: 01ARZ3NDEKTSV4RRFFQ69G5FAV
+    Username:
+      type: string
+      minLength: 3
+      maxLength: 30
+      pattern: ^[a-zA-Z0-9_-]+$
+      description: Username (3-30 characters, alphanumeric, underscore, and hyphen only)
+    Password:
+      type: string
+      format: password
+      minLength: 8
+      maxLength: 128
+      pattern: ^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$
+      description: Password (8-128 characters, must contain at least one lowercase letter, one uppercase letter, one digit, and one special character)
+    PasswordChangeRequest:
+      type: object
+      required:
+        - currentPassword
+        - newPassword
+        - newPasswordConfirmation
+      properties:
+        currentPassword:
+          $ref: '#/components/schemas/Password'
+          description: Current password for verification
+        newPassword:
+          $ref: '#/components/schemas/Password'
+          description: New password to set
+        newPasswordConfirmation:
+          $ref: '#/components/schemas/Password'
+          description: New password confirmation (must match newPassword)
+          x-validation-rule: must-match
+          x-match-field: newPassword
+      example:
+        currentPassword: MyOldPassword123!
+        newPassword: MyNewSecure456@
+        newPasswordConfirmation: MyNewSecure456@
+    User:
+      type: object
+      required:
+        - id
+        - username
+        - email
+      properties:
+        id:
+          $ref: '#/components/schemas/ULID'
+        username:
+          $ref: '#/components/schemas/Username'
+        email:
+          type: string
+          format: email
+    UserListItem:
+      type: object
+      required:
+        - id
+        - username
+        - email
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          $ref: '#/components/schemas/ULID'
+        username:
+          $ref: '#/components/schemas/Username'
+        email:
+          type: string
+          format: email
+        createdAt:
+          type: string
+          format: date-time
+          description: User creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+    UserDetails:
+      type: object
+      required:
+        - id
+        - username
+        - email
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          $ref: '#/components/schemas/ULID'
+        username:
+          $ref: '#/components/schemas/Username'
+        email:
+          type: string
+          format: email
+        createdAt:
+          type: string
+          format: date-time
+          description: User creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        lastLoginAt:
+          type: string
+          format: date-time
+          description: Last login timestamp
+          nullable: true
+    UserMe:
+      type: object
+      required:
+        - id
+        - username
+        - email
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          $ref: '#/components/schemas/ULID'
+        username:
+          $ref: '#/components/schemas/Username'
+        email:
+          type: string
+          format: email
+        createdAt:
+          type: string
+          format: date-time
+          description: User creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+    UserCreate:
+      type: object
+      required:
+        - username
+        - email
+        - password
+        - passwordConfirmation
+      properties:
+        username:
+          $ref: '#/components/schemas/Username'
+        email:
+          type: string
+          format: email
+        password:
+          $ref: '#/components/schemas/Password'
+        passwordConfirmation:
+          $ref: '#/components/schemas/Password'
+          description: Password confirmation (must match password)
+          x-validation-rule: must-match
+          x-match-field: password
+      example:
+        username: john_doe
+        email: john@example.com
+        password: MySecure123!
+        passwordConfirmation: MySecure123!
+    UserUpdate:
+      type: object
+      properties:
+        username:
+          $ref: '#/components/schemas/Username'
+        email:
+          type: string
+          format: email
+    LoginRequest:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          $ref: '#/components/schemas/Username'
+        password:
+          $ref: '#/components/schemas/Password'
+    LoginResponse:
+      type: object
+      required:
+        - token
+      properties:
+        token:
+          type: string
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          minimum: 1
+          description: Current page number
+          example: 1
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+          description: Number of items per page
+          example: 10
+        total:
+          type: integer
+          minimum: 0
+          description: Total number of items
+          example: 100
+      additionalProperties: false
+      required:
+        - page
+        - limit
+        - total

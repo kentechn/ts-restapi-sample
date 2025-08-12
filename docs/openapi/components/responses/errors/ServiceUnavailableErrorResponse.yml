@@ -1,0 +1,8 @@
+description: Service is unavailable
+content:
+  application/json:
+    schema:
+      $ref: ../../schemas/BaseError.yml
+    example:
+      code: SERVICE_UNAVAILABLE
+      detail: サービスが利用できません

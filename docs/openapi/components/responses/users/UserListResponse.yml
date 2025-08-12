@@ -1,0 +1,45 @@
+description: List of users with pagination metadata
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: ../../schemas/UserListItem.yml
+          description: Array of users
+        meta:
+          type: object
+          properties:
+            pagination:
+              $ref: ../../schemas/Pagination.yml
+          required:
+            - pagination
+          description: Metadata including pagination information
+      required:
+        - data
+        - meta
+      additionalProperties: false
+    example:
+      data:
+        - id: "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+          username: "john_doe"
+          email: "john@example.com"
+          createdAt: "2024-01-15T10:30:00Z"
+          updatedAt: "2024-01-15T10:30:00Z"
+        - id: "01ARZ3NDEKTSV4RRFFQ69G5FAW"
+          username: "jane_smith"
+          email: "jane@example.com"
+          createdAt: "2024-01-14T09:20:00Z"
+          updatedAt: "2024-01-14T09:20:00Z"
+        - id: "01ARZ3NDEKTSV4RRFFQ69G5FAZ"
+          username: "jane_l"
+          email: "jane_l@example.com"
+          createdAt: "2024-01-13T09:20:00Z"
+          updatedAt: "2024-01-13T09:20:00Z"
+      meta:
+        pagination:
+          page: 2
+          limit: 2
+          total: 3

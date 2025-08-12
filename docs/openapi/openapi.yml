@@ -1,0 +1,86 @@
+openapi: 3.0.3
+info:
+  title: User API
+  version: 1.0.0
+  description: API for user CRUD operations and authentication (login/logout)
+tags:
+  - name: users
+    description: Operations about users
+  - name: auth
+    description: Authentication operations (login/logout)
+  - name: health
+    description: Health check operations
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Development server
+paths:
+  /health:
+    $ref: paths/health.yml
+  /users:
+    $ref: paths/users.yml
+  /users/{id}:
+    $ref: paths/users_{id}.yml
+  /auth/login:
+    $ref: paths/login.yml
+  /auth/logout:
+    $ref: paths/logout.yml
+  /auth/me:
+    $ref: paths/auth_me.yml
+  /auth/password:
+    $ref: paths/auth_password.yml
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    InternalErrorResponse:
+      $ref: components/responses/errors/InternalErrorResponse.yml
+    BadRequestErrorResponse:
+      $ref: components/responses/errors/BadRequestErrorResponse.yml
+    UnprocessableEntityErrorResponse:
+      $ref: components/responses/errors/UnprocessableEntityErrorResponse.yml
+    NotFoundErrorResponse:
+      $ref: components/responses/errors/NotFoundErrorResponse.yml
+    UnauthorizedErrorResponse:
+      $ref: components/responses/errors/UnauthorizedErrorResponse.yml
+    ConflictErrorResponse:
+      $ref: components/responses/errors/ConflictErrorResponse.yml
+    TooManyRequestsErrorResponse:
+      $ref: components/responses/errors/TooManyRequestsErrorResponse.yml
+    ForbiddenErrorResponse:
+      $ref: components/responses/errors/ForbiddenErrorResponse.yml
+    ServiceUnavailableErrorResponse:
+      $ref: components/responses/errors/ServiceUnavailableErrorResponse.yml
+  schemas:
+    BaseError:
+      $ref: components/schemas/BaseError.yml
+    ValidationError:
+      $ref: components/schemas/ValidationError.yml
+    ValidationErrorItem:
+      $ref: components/schemas/ValidationErrorItem.yml
+    ULID:
+      $ref: components/schemas/ULID.yml
+    Username:
+      $ref: components/schemas/Username.yml
+    Password:
+      $ref: components/schemas/Password.yml
+    PasswordChangeRequest:
+      $ref: components/schemas/PasswordChangeRequest.yml
+    User:
+      $ref: components/schemas/User.yml
+    UserListItem:
+      $ref: components/schemas/UserListItem.yml
+    UserDetails:
+      $ref: components/schemas/UserDetails.yml
+    UserMe:
+      $ref: components/schemas/UserMe.yml
+    UserCreate:
+      $ref: components/schemas/UserCreate.yml
+    UserUpdate:
+      $ref: components/schemas/UserUpdate.yml
+    LoginRequest:
+      $ref: components/schemas/LoginRequest.yml
+    LoginResponse:
+      $ref: components/schemas/LoginResponse.yml

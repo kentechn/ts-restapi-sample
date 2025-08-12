@@ -1,0 +1,8 @@
+description: Unauthorized access
+content:
+  application/json:
+    schema:
+      $ref: ../../schemas/BaseError.yml
+    example:
+      code: UNAUTHORIZED
+      detail: 認証が必要です

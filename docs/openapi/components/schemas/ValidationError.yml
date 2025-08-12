@@ -1,0 +1,20 @@
+allOf:
+  - $ref: ./BaseError.yml
+  - type: object
+    required:
+      - errors
+    properties:
+      errors:
+        type: array
+        items:
+          $ref: ./ValidationErrorItem.yml
+example:
+  code: VALIDATION_ERROR
+  detail: 入力値のバリデーションに失敗しました
+  errors:
+    - field: email
+      code: INVALID_FORMAT
+      message: メールアドレスの形式が正しくありません
+    - field: password
+      code: TOO_SHORT
+      message: パスワードは8文字以上で入力してください

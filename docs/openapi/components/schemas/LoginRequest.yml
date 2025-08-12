@@ -1,0 +1,9 @@
+type: object
+required:
+  - username
+  - password
+properties:
+  username:
+    $ref: ../schemas/Username.yml
+  password:
+    $ref: ../schemas/Password.yml

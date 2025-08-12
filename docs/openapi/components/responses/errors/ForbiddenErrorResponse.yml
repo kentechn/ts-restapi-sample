@@ -1,0 +1,8 @@
+description: Forbidden access
+content:
+  application/json:
+    schema:
+      $ref: ../../schemas/BaseError.yml
+    example:
+      code: FORBIDDEN
+      detail: このリソースへのアクセス権限がありません

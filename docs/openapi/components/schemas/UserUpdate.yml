@@ -1,0 +1,7 @@
+type: object
+properties:
+  username:
+    $ref: ../schemas/Username.yml
+  email:
+    type: string
+    format: email

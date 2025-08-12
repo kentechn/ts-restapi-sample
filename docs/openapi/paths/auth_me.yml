@@ -1,0 +1,21 @@
+get:
+  tags:
+    - auth
+  summary: Get current user info
+  description: 'Get current authenticated user information'
+  operationId: getCurrentUser
+  security:
+    - bearerAuth: []
+  responses:
+    '200':
+      description: Current user information
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/UserMe.yml
+    '401':
+      $ref: ../components/responses/errors/UnauthorizedErrorResponse.yml
+    '429':
+      $ref: ../components/responses/errors/TooManyRequestsErrorResponse.yml
+    '500':
+      $ref: ../components/responses/errors/InternalErrorResponse.yml

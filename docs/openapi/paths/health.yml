@@ -1,0 +1,22 @@
+get:
+  tags:
+    - health
+  summary: Health check endpoint
+  description: Returns the health status of the API
+  operationId: healthCheck
+  security: []
+  responses:
+    '200':
+      description: Service is healthy
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: "ok"
+            required:
+              - status
+    '503':
+      $ref: ../components/responses/errors/ServiceUnavailableErrorResponse.yml

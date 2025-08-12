@@ -1,0 +1,8 @@
+description: Resource conflict
+content:
+  application/json:
+    schema:
+      $ref: ../../schemas/BaseError.yml
+    example:
+      code: CONFLICT
+      detail: 指定されたリソースは既に存在します

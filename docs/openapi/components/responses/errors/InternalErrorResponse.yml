@@ -1,0 +1,8 @@
+description: Internal server error
+content:
+  application/json:
+    schema:
+      $ref: ../../schemas/BaseError.yml
+    example:
+      code: INTERNAL_SERVER_ERROR
+      detail: 予期しないサーバーエラーが発生しました

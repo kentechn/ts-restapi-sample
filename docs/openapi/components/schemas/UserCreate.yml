@@ -1,0 +1,24 @@
+type: object
+required:
+  - username
+  - email
+  - password
+  - passwordConfirmation
+properties:
+  username:
+    $ref: ../schemas/Username.yml
+  email:
+    type: string
+    format: email
+  password:
+    $ref: ../schemas/Password.yml
+  passwordConfirmation:
+    $ref: ../schemas/Password.yml
+    description: 'Password confirmation (must match password)'
+    x-validation-rule: 'must-match'
+    x-match-field: 'password'
+example:
+  username: 'john_doe'
+  email: 'john@example.com'
+  password: 'MySecure123!'
+  passwordConfirmation: 'MySecure123!'

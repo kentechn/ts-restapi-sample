@@ -1,0 +1,44 @@
+{
+  "name": "ts-restapi-sample",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsup --env.NODE_ENV production",
+    "start": "node dist/index.js",
+    "redoc:build:docs": "redocly build-docs ./docs/openapi.gen.yml -o ./docs/redoc_static.html",
+    "redoc:split": "redocly split ./docs/openapi.gen.yml --outDir ./docs/openapi",
+    "redoc:bundle": "redocly bundle ./docs/openapi/openapi.yml --output docs/openapi.gen.yml",
+    "redoc:lint": "redocly lint ./docs/openapi/openapi.yml --config ./docs/config.yml",
+    "orval:generate": "orval",
+    "mock:start": "prism mock ./docs/openapi.gen.yml --port 3001",
+    "mock:start-dynamic": "prism mock ./docs/openapi.gen.yml --port 3001 --dynamic true",
+    "mock:validate": "prism validate ./docs/openapi.gen.yml",
+    "biome:check": "biome check .",
+    "biome:check:fix": "biome check --write .",
+    "biome:ci": "biome ci .",
+    "biome:check:staged": "biome check --staged .",
+    "biome:check:changed": "biome check --changed ."
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.18.1",
+    "@hono/swagger-ui": "^0.5.2",
+    "@hono/zod-validator": "^0.7.2",
+    "hono": "^4.9.0",
+    "hono-openapi": "^0.4.8",
+    "pino": "^9.8.0",
+    "zod": "^4.0.17",
+    "zod-openapi": "^5.3.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.1.4",
+    "@faker-js/faker": "^9.9.0",
+    "@orval/zod": "^7.11.2",
+    "@stoplight/prism-cli": "^5.14.2",
+    "@types/node": "^20.11.17",
+    "orval": "^7.11.2",
+    "pino-pretty": "^13.1.1",
+    "tsup": "^8.5.0",
+    "tsx": "^4.7.1",
+    "typescript": "^5.8.3"
+  }
+}

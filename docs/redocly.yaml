@@ -1,0 +1,6 @@
+rules:
+  # localhostの警告を無効化
+  no-server-example.com: off
+  # ライセンス情報の警告を無効化
+  info-license: off
+
