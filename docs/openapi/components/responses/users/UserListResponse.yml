@@ -40,6 +40,6 @@ content:
           updatedAt: "2024-01-13T09:20:00Z"
       meta:
         pagination:
-          page: 2
-          limit: 2
+          offset: 0
+          limit: 20
           total: 3

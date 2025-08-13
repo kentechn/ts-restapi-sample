@@ -2,22 +2,28 @@ get:
   tags:
     - users
   summary: Get all users (Admin only)
-  description: 'Retrieve all users with pagination. Only accessible by administrators.'
+  description: |
+    Retrieve all users with pagination. Only accessible by administrators.
+    
+    Returns 422 error when:
+    - Offset is invalid (negative integer or out of range)
+    - Limit parameter is invalid (outside 1-100 range)
+    - Offset exceeds total number of available records
   operationId: getAllUsers
   security:
     - bearerAuth: []
   parameters:
-    - name: page
+    - name: offset
       in: query
-      description: Page number
+      description: 'Number of records to skip (must be non-negative integer). Returns 422 if the offset is out of range or invalid.'
       required: false
       schema:
         type: integer
-        minimum: 1
-        default: 1
+        minimum: 0
+        default: 0
     - name: limit
       in: query
-      description: Number of items per page
+      description: 'Number of items per page (1-100). Returns 422 if the limit is out of range or invalid.'
       required: false
       schema:
         type: integer
@@ -31,6 +37,8 @@ get:
       $ref: ../components/responses/errors/UnauthorizedErrorResponse.yml
     '403':
       $ref: ../components/responses/errors/ForbiddenErrorResponse.yml
+    '422':
+      $ref: ../components/responses/errors/UnprocessableEntityErrorResponse.yml
     '429':
       $ref: ../components/responses/errors/TooManyRequestsErrorResponse.yml
     '500':

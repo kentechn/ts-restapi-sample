@@ -3,7 +3,7 @@ import { healthDescribeRoute } from "../openapi/health-describe-route.js";
 
 const healthRoute = new Hono();
 
-healthRoute.get("/", healthDescribeRoute, (c) => {
+healthRoute.get("/", healthDescribeRoute, async (c) => {
   return c.json({
     status: "ok",
   });

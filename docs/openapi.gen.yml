@@ -42,22 +42,28 @@ paths:
       tags:
         - users
       summary: Get all users (Admin only)
-      description: Retrieve all users with pagination. Only accessible by administrators.
+      description: |
+        Retrieve all users with pagination. Only accessible by administrators.
+
+        Returns 422 error when:
+        - Offset is invalid (negative integer or out of range)
+        - Limit parameter is invalid (outside 1-100 range)
+        - Offset exceeds total number of available records
       operationId: getAllUsers
       security:
         - bearerAuth: []
       parameters:
-        - name: page
+        - name: offset
           in: query
-          description: Page number
+          description: Number of records to skip (must be non-negative integer). Returns 422 if the offset is out of range or invalid.
           required: false
           schema:
             type: integer
-            minimum: 1
-            default: 1
+            minimum: 0
+            default: 0
         - name: limit
           in: query
-          description: Number of items per page
+          description: Number of items per page (1-100). Returns 422 if the limit is out of range or invalid.
           required: false
           schema:
             type: integer
@@ -71,6 +77,8 @@ paths:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         '403':
           $ref: '#/components/responses/ForbiddenErrorResponse'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntityErrorResponse'
         '429':
           $ref: '#/components/responses/TooManyRequestsErrorResponse'
         '500':
@@ -440,8 +448,8 @@ components:
                 updatedAt: '2024-01-13T09:20:00Z'
             meta:
               pagination:
-                page: 2
-                limit: 2
+                offset: 0
+                limit: 20
                 total: 3
   schemas:
     BaseError:
@@ -678,11 +686,11 @@ components:
     Pagination:
       type: object
       properties:
-        page:
+        offset:
           type: integer
-          minimum: 1
-          description: Current page number
-          example: 1
+          minimum: 0
+          description: Current offset number
+          example: 0
         limit:
           type: integer
           minimum: 1
@@ -696,6 +704,6 @@ components:
           example: 100
       additionalProperties: false
       required:
-        - page
+        - offset
         - limit
         - total

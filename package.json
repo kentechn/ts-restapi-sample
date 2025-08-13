@@ -17,7 +17,9 @@
     "biome:check:fix": "biome check --write .",
     "biome:ci": "biome ci .",
     "biome:check:staged": "biome check --staged .",
-    "biome:check:changed": "biome check --changed ."
+    "biome:check:changed": "biome check --changed .",
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@hono/node-server": "^1.18.1",
@@ -35,10 +37,12 @@
     "@orval/zod": "^7.11.2",
     "@stoplight/prism-cli": "^5.14.2",
     "@types/node": "^20.11.17",
+    "@vitest/coverage-v8": "3.2.4",
     "orval": "^7.11.2",
     "pino-pretty": "^13.1.1",
     "tsup": "^8.5.0",
     "tsx": "^4.7.1",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
   }
 }

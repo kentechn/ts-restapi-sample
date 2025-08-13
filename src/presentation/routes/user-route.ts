@@ -1,7 +1,49 @@
 import { Hono } from "hono";
-
-import { describeRoute } from "hono-openapi";
-// You can import these for your preferred validation library
-import { resolver, validator as vValidator } from "hono-openapi/zod";
+import { validator as zValidator } from "hono-openapi/zod";
+import type { UserListItem } from "../generated/types/userListItem.js";
+import { getUsersDescribeRoute } from "../openapi/users-describe-route.js";
+import { getAllUsersQueryParamsWithCoerce } from "../schemas/users-coerce.js";
 
 const usersRoute = new Hono();
+
+usersRoute.get(
+  "/",
+  getUsersDescribeRoute,
+  zValidator("query", getAllUsersQueryParamsWithCoerce, (result, _c) => {
+    if (!result.success) {
+      throw result.error;
+    }
+  }),
+  async (c) => {
+    const query = c.req.valid("query");
+    console.log("Query parameters:", query);
+
+    // UseCase を実行
+    const result = await getUsersUsecase.execute({
+      offset: query.offset ?? 0,
+      limit: query.limit ?? 10,
+    });
+
+    // UseCase の結果を API レスポンス形式に変換
+    const users: UserListItem[] = result.users.map((user) => ({
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      createdAt: user.createdAt.toISOString(),
+      updatedAt: user.updatedAt.toISOString(),
+    }));
+
+    return c.json({
+      data: users,
+      meta: {
+        pagination: {
+          offset: query.offset,
+          limit: query.limit,
+          total: result.totalCount,
+        },
+      },
+    });
+  }
+);
+
+export default usersRoute;

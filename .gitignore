@@ -30,6 +30,7 @@ lerna-debug.log*
 # auto generated
 src/presentation/generated/
 docs/openapi.gen.yml
+coverage/
 
 # dist
 dist/
