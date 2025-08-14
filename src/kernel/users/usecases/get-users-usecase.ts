@@ -1,3 +1,5 @@
+import { inject, injectable } from "inversify";
+import { TYPES } from "@/di/types.js";
 import { UseCase } from "@/kernel/common/usecase.js";
 import { createError } from "@/kernel/error/app-error.js";
 import type { UserRepository } from "@/kernel/users/user-repository.js";
@@ -6,6 +8,7 @@ import type {
   GetUsersResult,
 } from "@/kernel/users/user-types.js";
 
+@injectable()
 export class GetUsersUsecase extends UseCase<
   UserRepository,
   [GetUsersParams],

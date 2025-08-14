@@ -14,18 +14,18 @@ export const getAllUsersQueryParamsWithCoerce = zod.object({
   offset: zod.coerce
     .number()
     .min(getAllUsersQueryOffsetMin)
-    .default(getAllUsersQueryOffsetDefault)
     .optional()
+    .default(getAllUsersQueryOffsetDefault)
     .describe(
-      "Number of records to skip (must be non-negative integer). Returns 422 if the offset is out of range or invalid.",
+      "Number of records to skip (must be non-negative integer). Returns 422 if the offset is out of range or invalid."
     ),
   limit: zod.coerce
     .number()
     .min(1)
     .max(getAllUsersQueryLimitMax)
-    .default(getAllUsersQueryLimitDefault)
     .optional()
+    .default(getAllUsersQueryLimitDefault)
     .describe(
-      "Number of items per page (1-100). Returns 422 if the limit is out of range or invalid.",
+      "Number of items per page (1-100). Returns 422 if the limit is out of range or invalid."
     ),
 });

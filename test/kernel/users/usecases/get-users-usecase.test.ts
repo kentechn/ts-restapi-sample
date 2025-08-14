@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, type Mock, vi } from "vitest";
 import { AppError } from "@/kernel/error/app-error.js";
-import { GetUsersUsecase } from "@/kernel/users/usecases/user-usecase.js";
+import { GetUsersUsecase } from "@/kernel/users/usecases/get-users-usecase.js";
 import type { UserRepository } from "@/kernel/users/user-repository.js";
 import type { GetUsersParams, User } from "@/kernel/users/user-types.js";
 

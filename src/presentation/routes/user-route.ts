@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { validator as zValidator } from "hono-openapi/zod";
+import { getUsersUsecase } from "@/kernel/users/usecases/index.js";
 import type { UserListItem } from "../generated/types/userListItem.js";
 import { getUsersDescribeRoute } from "../openapi/users-describe-route.js";
 import { getAllUsersQueryParamsWithCoerce } from "../schemas/users-coerce.js";
@@ -20,8 +21,8 @@ usersRoute.get(
 
     // UseCase を実行
     const result = await getUsersUsecase.execute({
-      offset: query.offset ?? 0,
-      limit: query.limit ?? 10,
+      offset: query.offset,
+      limit: query.limit,
     });
 
     // UseCase の結果を API レスポンス形式に変換
